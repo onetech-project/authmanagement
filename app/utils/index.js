@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import * as Constants from "../constants/index.js";
+import mailer from "./mailer.js";
 
 const cleanEmpty = (obj) => {
   if (Array.isArray(obj)) {
@@ -28,7 +29,14 @@ const JWTGenerator = (userInfo = { id, role }, expiresIn = 86400) => {
 };
 
 const verifyJWT = (token) => {
-  return jwt.verify(token, Constants.JWTKEY);
+  if (!token) throw new Error("Token is undefined");
+  return jwt.verify(token.split(" ")[1], Constants.JWTKEY);
 };
 
-export default { cleanEmpty, cipher, JWTGenerator, verifyJWT };
+export default {
+  cleanEmpty,
+  cipher,
+  JWTGenerator,
+  verifyJWT,
+  mailer,
+};
